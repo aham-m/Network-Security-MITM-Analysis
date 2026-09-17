@@ -1,238 +1,326 @@
-# Network Security MITM Analysis
+# Network Security Analysis & Controlled MITM Simulation
 
-A controlled network security testing project that demonstrates ARP-based
-Man-in-the-Middle (MITM) positioning and DNS traffic analysis using Python
-and Scapy.
+A Python and Scapy-based cybersecurity project demonstrating controlled Man-in-the-Middle (MITM) positioning through ARP spoofing and observation of DNS queries in an authorized laboratory network environment.
 
-This project was developed for educational and security research purposes
-in an authorized local network test environment.
+## Overview
+
+This project was developed as a practical exploration of computer networking and network security concepts.
+
+The implementation uses **Python and Scapy** to demonstrate how ARP-based traffic redirection can position a testing machine between two devices on a local network. It then monitors DNS traffic and records observed DNS queries for analysis.
+
+The project is intended for **educational use, controlled laboratory environments, and networks where explicit authorization has been obtained**.
+
+## Objectives
+
+The primary objectives of the project are to:
+
+- Understand ARP communication and ARP cache behavior.
+- Demonstrate the concept of ARP-based Man-in-the-Middle positioning.
+- Capture and analyze DNS query packets.
+- Understand the relationship between Ethernet, ARP, IP and DNS traffic.
+- Explore packet-level network analysis using Scapy.
+- Practice Python-based network automation and troubleshooting.
+- Demonstrate the security implications of weak ARP trust mechanisms.
 
 ## Features
 
-- ARP-based MITM positioning for controlled local network testing
-- DNS query observation using Scapy packet capture
-- Source IP and queried domain extraction
-- Duplicate DNS query suppression within a configurable time window
-- Periodic ARP poisoning to maintain test positioning
-- ARP table restoration after the test is stopped
-- Externalized network-specific configuration
-- Git-safe configuration management using a local ignored file
-- Graceful handling of missing or invalid configuration files
+- Ethernet and ARP packet construction using Scapy.
+- Controlled bidirectional ARP spoofing demonstration.
+- Continuous ARP packet transmission during the test.
+- DNS query packet monitoring.
+- Extraction of source IP and queried domain.
+- Duplicate-query suppression using a configurable time interval.
+- Graceful interruption using `Ctrl+C`.
+- ARP table restoration when the test terminates.
+- Console-based security-testing output.
 
-## Technologies
+## Technologies Used
 
-- **Python 3**
-- **Scapy 2.6.1**
-- **ARP (Address Resolution Protocol)**
-- **Ethernet and IPv4 networking**
-- **DNS (Domain Name System)**
-- **Packet sniffing and traffic analysis**
-- **Python threading and asynchronous packet capture**
-- **Windows networking tools**
+- **Python**
+- **Scapy**
+- **TCP/IP networking**
+- **Ethernet**
+- **ARP**
+- **DNS**
+- **Packet sniffing**
+- **Python threading**
 
-## Project Structure
+## Networking Concepts Demonstrated
 
-```text
-Network-Security-MITM-Analysis/
-|-- .gitignore
-|-- README.md
-|-- requirements.txt
-|
-|-- config/
-|   |-- config.example.json
-|   `-- config.local.json
-|
-`-- src/
-    `-- mitm_dns.py
-```
+### ARP
 
-### Configuration files
+Address Resolution Protocol (ARP) is used on IPv4 local networks to associate IP addresses with MAC addresses.
 
-- `config.example.json` — safe template showing the required configuration fields.
-- `config.local.json` — local environment configuration containing network-specific values. This file is excluded from version control through `.gitignore`.
+The project demonstrates how manipulating ARP responses can affect the local network's IP-to-MAC mappings.
 
-## Configuration
+### Man-in-the-Middle Positioning
 
-Before running the project, create a local configuration file from the provided example:
+The project demonstrates the concept of positioning a testing machine between a target device and its gateway through manipulated ARP information.
+
+This is performed only within an authorized test environment.
+
+### DNS Traffic
+
+The sniffer monitors DNS traffic on port 53 and identifies DNS query packets.
+
+For observed queries, the program records:
 
 ```text
-config/config.example.json → config/config.local.json
+Source IP → Requested Domain
 ```
 
-Update `config.local.json` with the values for your authorized test environment:
+Example format:
 
-- `interface_index` — Scapy network interface index used for the test.
-- `target_ip` — IP address of the authorized test target.
-- `gateway_ip` — IP address of the network gateway.
-- `target_mac` — MAC address of the authorized test target.
-- `gateway_mac` — MAC address of the network gateway.
-- `excluded_ip` — source IP excluded from DNS query logging.
+```text
+[DNS] <test-client-ip> queried example.test
+```
 
-The local configuration file is intentionally excluded from Git version control. Do not commit real IP addresses, MAC addresses, credentials, or other environment-specific information to the repository.
+Actual network addresses used during testing are intentionally not included in this repository.
+
+## High-Level Workflow
+
+```text
+                 Controlled Test Network
+
+             ┌──────────────────────┐
+             │       Gateway        │
+             └──────────┬───────────┘
+                        │
+                        │
+                 ┌──────┴──────┐
+                 │ Test Machine│
+                 │ Python/Scapy│
+                 └──────┬──────┘
+                        │
+                        │
+                 ┌──────┴──────┐
+                 │ Test Target │
+                 │   Device    │
+                 └─────────────┘
+```
+
+At a high level:
+
+```text
+1. Identify the authorized test devices.
+            ↓
+2. Send controlled ARP responses.
+            ↓
+3. Position the testing machine in the
+   intended laboratory traffic path.
+            ↓
+4. Monitor DNS query traffic.
+            ↓
+5. Record relevant DNS observations.
+            ↓
+6. Stop the test.
+            ↓
+7. Restore ARP information.
+```
 
 ## Requirements
 
-- Python 3.9 or later
-- Scapy 2.6.1
-- Windows operating system
-- A network interface accessible to Scapy
-- Administrator privileges may be required for packet capture and packet transmission
+- Python 3.x
+- Scapy
+- Network interface capable of accessing the authorized test network.
+- Administrative/root privileges may be required depending on the operating system and packet-capture configuration.
 
-Install the Python dependency with:
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd network-security-mitm-analysis
+```
+
+Create a virtual environment:
+
+### Windows
+
 ```powershell
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### Linux
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the required Python dependency:
+
+```bash
 pip install -r requirements.txt
 ```
 
-Verify the installation with:
-```
-python -c "import scapy; print(scapy.__version__)"
-```
+## Configuration
 
-The expected version for this project is:
-```
-2.6.1
-```
+The original development version used machine-specific network values.
 
-## Network Prerequisites
+These values should **not** be committed to the public repository.
 
-This project requires a controlled local network environment in which the
-tester has explicit authorization to perform security testing.
+Before running the project, configure the required laboratory network parameters locally.
 
-Before starting the script:
+The configuration should contain only information belonging to the authorized test environment, such as:
 
-1. Identify the correct network interface used for the authorized test.
-2. Enable IPv4 forwarding on the appropriate Windows network interface.
-3. Confirm that the interface identifier configured in `config.local.json`
-   matches the interface currently used by the system.
-4. Verify that the configured target and gateway addresses belong to the
-   authorized test environment.
+- testing interface
+- target IP address
+- gateway IP address
+- target MAC address
+- gateway MAC address
+- optional local filtering/exclusion address
 
-Network interface identifiers can change between systems or network
-connections, so the value should not be hardcoded in the source code.
+See:
 
-> **Safety:** Run this project only on systems and networks you own or have
-> explicit permission to test.
-
-## Execution
-
-From the repository root, run:
-
-```powershell
-python src/mitm_dns.py
+```text
+config/config.example
 ```
 
-When started, the program:
+for the expected configuration format.
 
-1. Loads the local network configuration.
-2. Resolves the configured Scapy network interface.
-3. Starts the ARP-based MITM positioning loop.
-4. Starts asynchronous DNS packet observation on port 53.
-5. Displays observed DNS queries in the terminal.
-6. Restores the ARP mappings when the process is stopped.
+Do not commit private credentials, personal network information, or unrelated device information.
 
-To stop the program safely, press:
+## Running the Project
+
+After configuring the authorized laboratory environment, run the Python program according to the instructions in the source file.
+
+The program starts the controlled ARP testing process and DNS monitoring process.
+
+During execution, DNS observations are displayed in the console.
+
+Example:
+
+```text
+[*] Starting ARP spoofing and DNS sniffing...
+[DNS] <source-ip> queried <domain>
+```
+
+The exact output depends on the traffic generated by the test environment.
+
+Press:
+
 ```text
 Ctrl+C
 ```
 
-The program then stops the packet sniffer and attempts to restore the
-original ARP mappings.
+to stop the test.
 
-## How It Works
+The program then attempts to restore the ARP information used during the demonstration.
 
-The project combines two components during a controlled network security test:
+## Methodology
 
-### 1. ARP-Based MITM Positioning
+The project combines two activities:
 
-The script sends crafted ARP replies to the authorized target and gateway,
-causing each device to associate the tester's machine with the other's IP
-address.
+1. Controlled ARP manipulation for demonstrating MITM positioning.
+2. DNS packet observation for studying application-layer name-resolution traffic.
 
-This places the tester logically between the target and gateway at the
-local network layer.
+The ARP component repeatedly sends crafted ARP responses to the authorized test devices.
 
-The ARP positioning loop periodically retransmits the forged mappings to
-maintain the test state. When the program is stopped, legitimate ARP
-mappings are sent back to the target and gateway to restore the network state.
+The DNS component uses Scapy's asynchronous packet-sniffing functionality and examines IPv4 DNS query packets.
 
-### 2. DNS Traffic Analysis
+The implementation also applies a short deduplication interval to reduce repeated console output for the same source-IP/domain combination.
 
-While the ARP-based test is active, Scapy captures packets matching port 53.
-
-The DNS analysis component:
-
-- Identifies DNS query packets.
-- Extracts the source IP address.
-- Extracts the requested domain name.
-- Ignores the configured excluded source IP.
-- Suppresses repeated identical queries for a short time window.
-- Displays the observed query in the terminal.
-
-Example output:
+A detailed methodology is available in:
 
 ```text
-[DNS] 192.168.31.100 queried example.com
+docs/methodology.md
 ```
 
-This project focuses on observing DNS query metadata in a controlled
-environment. It does not decrypt HTTPS/TLS traffic.
+## Security Implications
 
-## Security and Authorization
+The project demonstrates why relying solely on unauthenticated ARP communication can expose local IPv4 networks to traffic-redirection attacks.
 
-This project is intended strictly for:
+Potential defensive considerations include:
 
-- Personal cybersecurity learning
-- Authorized penetration-testing labs
-- Isolated virtual or physical test networks
-- Academic and security research
-
-Do not run the script against networks, devices, or traffic without explicit
-authorization.
-
-The repository intentionally separates environment-specific network
-configuration from the source code to reduce the risk of exposing real
-network information.
-
-The author is not responsible for unauthorized use, network disruption, or
-damage resulting from misuse of this software.
+- Static ARP entries where appropriate.
+- Dynamic ARP Inspection on supported network infrastructure.
+- Network segmentation.
+- Monitoring for unexpected ARP changes.
+- Detection of duplicate or conflicting IP/MAC mappings.
+- Use of encrypted application-layer protocols.
+- DNS security monitoring and appropriate network controls.
 
 ## Limitations
 
-- The project is designed for controlled IPv4 local-network testing.
-- DNS analysis is limited to traffic visible to the configured network
-  interface and matching the capture filter.
-- Encrypted DNS protocols such as DoH and DoT may prevent the queried domain
-  from being visible through traditional DNS packet inspection.
-- The project does not decrypt HTTPS/TLS traffic.
-- Network interface identifiers may change between systems or connections.
-- Successful packet capture and transmission depend on the operating system,
-  network adapter, permissions, and Scapy configuration.
-- The implementation is intended as an educational security-testing
-  demonstration rather than a production-grade network monitoring system.
+This project is a learning-oriented demonstration rather than a production penetration-testing framework.
+
+Current limitations include:
+
+- Designed around a controlled local IPv4 network.
+- Requires appropriate network privileges.
+- DNS visibility depends on the traffic available to the testing machine.
+- Encrypted DNS protocols such as DoH/DoT are not analyzed by the current implementation.
+- The implementation is not intended to provide general-purpose traffic interception.
+- Configuration is environment-dependent.
+- No automated attack detection or defensive monitoring component is currently included.
+
+## Ethical and Legal Use
+
+This project must only be used on:
+
+- Networks you own.
+- Laboratory environments.
+- Devices you own.
+- Systems for which you have explicit authorization to perform security testing.
+
+Do not use the implementation to intercept, redirect, monitor, or manipulate traffic belonging to other users or networks without authorization.
+
+The author does not encourage unauthorized network interception or disruption.
 
 ## Future Improvements
 
-Potential improvements for future versions include:
+Potential educational improvements include:
 
-- Add structured logging instead of terminal-only output.
-- Improve configuration validation and error handling.
-- Make the DNS deduplication interval configurable through the configuration
-  file.
-- Add support for additional DNS transport and analysis scenarios where
-  technically feasible.
-- Introduce automated tests for configuration loading and DNS packet parsing.
-- Improve cross-platform network interface handling.
-- Add packet-analysis statistics for controlled security experiments.
-- Provide a dedicated test mode using simulated or replayed packet data.
+- Cleaner configuration management.
+- Better packet-analysis reporting.
+- Structured logging.
+- Additional defensive detection mechanisms.
+- Visualization of DNS observations.
+- Automated laboratory setup documentation.
+- Comparison of normal and anomalous ARP behavior.
+
+## Project Structure
+
+```text
+network-security-mitm-analysis/
+│
+├── README.md
+├── requirements.txt
+├── LICENSE
+├── .gitignore
+│
+├── src/
+│   └── mitm_dns_analysis.py
+│
+├── config/
+│   └── config.example
+│
+├── docs/
+│   └── methodology.md
+│
+└── screenshots/
+```
+
+## Author
+
+**Aham Mondal**
+
+B.Tech Information Technology Graduate
+
+Interested in:
+
+- Software Development
+- Computer Networks
+- Cybersecurity
+- Network Security
+- Python
+- Java
+
+---
 
 ## Disclaimer
 
-This project is provided for educational, academic, and authorized security
-research purposes only.
-
-The techniques demonstrated by this project can affect network connectivity
-when used improperly. Always obtain explicit authorization before performing
-security testing on any network or device.
-
-Use the project responsibly and only within environments where you have
-permission to conduct testing.
+This repository is provided for educational and authorized security-testing purposes only. Always obtain explicit permission before performing security testing or packet analysis on a network or device.
