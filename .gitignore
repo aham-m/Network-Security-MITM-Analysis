@@ -1,0 +1,17 @@
+# Local network configuration
+config/config.local.json
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# IDE / editor files
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
