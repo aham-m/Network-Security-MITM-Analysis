@@ -176,7 +176,7 @@ The configuration should contain only information belonging to the authorized te
 See:
 
 ```text
-config/config.example
+config/config.example.json
 ```
 
 for the expected configuration format.
