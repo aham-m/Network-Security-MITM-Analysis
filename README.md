@@ -120,7 +120,7 @@ At a high level:
 
 ## Requirements
 
-- Python 3.x
+- Python
 - Scapy
 - Network interface capable of accessing the authorized test network.
 - Administrative/root privileges may be required depending on the operating system and packet-capture configuration.
@@ -130,8 +130,8 @@ At a high level:
 Clone the repository:
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd network-security-mitm-analysis
+git clone https://github.com/aham-m/Network-Security-MITM-Analysis
+cd Network-Security-MITM-Analysis
 ```
 
 Create a virtual environment:
@@ -285,7 +285,7 @@ Potential educational improvements include:
 ## Project Structure
 
 ```text
-network-security-mitm-analysis/
+Network-Security-MITM-Analysis/
 │
 ├── README.md
 ├── requirements.txt
@@ -293,20 +293,18 @@ network-security-mitm-analysis/
 ├── .gitignore
 │
 ├── src/
-│   └── mitm_dns_analysis.py
+│   └── mitm_dns.py
 │
 ├── config/
 │   └── config.example
 │
-├── docs/
-│   └── methodology.md
-│
-└── screenshots/
+└── docs/
+    └── methodology.md
 ```
 
 ## Author
 
-**Aham Mondal**
+**Aham Mondal** [@aham-m](https://github.com/aham-m)
 
 B.Tech Information Technology Graduate
 
