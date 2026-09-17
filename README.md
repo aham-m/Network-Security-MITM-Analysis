@@ -29,7 +29,7 @@ The primary objectives of the project are to:
 - Continuous ARP packet transmission during the test.
 - DNS query packet monitoring.
 - Extraction of source IP and queried domain.
-- Duplicate-query suppression using a configurable time interval.
+- Duplicate-query suppression using a short time interval.
 - Graceful interruption using `Ctrl+C`.
 - ARP table restoration when the test terminates.
 - Console-based security-testing output.
@@ -124,6 +124,8 @@ At a high level:
 - Scapy
 - Network interface capable of accessing the authorized test network.
 - Administrative/root privileges may be required depending on the operating system and packet-capture configuration.
+- On Windows, IP forwarding may need to be enabled manually on the selected network interface before running the test.
+  - On Windows, this can be enabled from an elevated Command Prompt or PowerShell session using the appropriate network-interface index for the test machine.
 
 ## Installation
 
@@ -166,7 +168,7 @@ Before running the project, configure the required laboratory network parameters
 
 The configuration should contain only information belonging to the authorized test environment, such as:
 
-- testing interface
+- network interface index
 - target IP address
 - gateway IP address
 - target MAC address
@@ -186,6 +188,9 @@ Do not commit private credentials, personal network information, or unrelated de
 ## Running the Project
 
 After configuring the authorized laboratory environment, run the Python program according to the instructions in the source file.
+```bash
+python src/mitm_dns.py
+```
 
 The program starts the controlled ARP testing process and DNS monitoring process.
 
